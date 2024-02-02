@@ -1,0 +1,17 @@
+extends layout
+
+block content
+
+  h1 Category: #{category.name}
+
+  div(style='margin-left:20px;margin-top:20px')
+
+    h4 Games
+    if category_games.length
+      dl
+        each game in category_games
+          dt
+            a(href=game.url) #{game.title}
+          dd #{game.desc}
+    else
+      p This category has no games.
