@@ -1,8 +1,18 @@
 const Game = require("../models/game");
+const Category = require("../models/category")
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Site Home Page");
+  const [numGames, numCategories] = await Promise.all([
+    Game.countDocuments({}).exec(),
+    Category.countDocuments({}).exec()
+  ]);
+
+  res.render("index", {
+    title: "Game Inventory Home",
+    game_count: numGames,
+    category_count: numCategories
+  })
 });
 
 exports.game_list = asyncHandler(async (req, res, next) => {
