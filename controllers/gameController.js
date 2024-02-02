@@ -21,7 +21,8 @@ exports.game_list = asyncHandler(async (req, res, next) => {
 });
 
 exports.game_detail = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: Game detail: ${req.params.id}`);
+  const game = await Game.findById(req.params.id).populate("category").exec();
+  res.render("game_detail", { title: game.title, game: game })
 });
 
 exports.game_create_get = asyncHandler(async (req, res, next) => {
