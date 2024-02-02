@@ -16,7 +16,8 @@ exports.index = asyncHandler(async (req, res, next) => {
 });
 
 exports.game_list = asyncHandler(async (req, res, next) => {
-  res.send("Not Implemented: Game List")
+  const allGames = await Game.find().exec();
+  res.render("game_list", { title: "Game List", game_list: allGames });
 });
 
 exports.game_detail = asyncHandler(async (req, res, next) => {
