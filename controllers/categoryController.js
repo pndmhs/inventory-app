@@ -7,15 +7,15 @@ exports.category_list = asyncHandler(async (req, res, next) => {
   const allCategories = await Category.find().exec();
   res.render("category_list", {
     title: "Category List",
-    list_categories: allCategories
-  })
+    list_categories: allCategories,
+  });
 });
 
 exports.category_detail = asyncHandler(async (req, res, next) => {
   const [category, gamesInCategory] = await Promise.all([
     Category.findById(req.params.id).exec(),
-    Game.find({ category: req.params.id }, "title desc").exec()
-  ])
+    Game.find({ category: req.params.id }, "title desc").exec(),
+  ]);
 
   if (category === null) {
     const err = new Error("Category not found");
@@ -26,8 +26,8 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
   res.render("category_detail", {
     title: "Category Detail",
     category: category,
-    category_games: gamesInCategory
-  })
+    category_games: gamesInCategory,
+  });
 });
 
 exports.category_create_get = asyncHandler(async (req, res, next) => {
@@ -35,22 +35,19 @@ exports.category_create_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.category_create_post = [
-  body("name", "Name must not be empty")
+  body("name", "Name must not be empty").trim().isLength({ min: 1 }).escape(),
+  body("description", "Description must not be empty")
     .trim()
     .isLength({ min: 1 })
     .escape(),
-  body("desc", "Description must not be empty")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
-  
+
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
     const category = new Category({
       name: req.body.name,
-      desc: req.body.description
-    })
+      desc: req.body.description,
+    });
 
     if (!errors.isEmpty()) {
       res.render("category_form", {
@@ -58,9 +55,11 @@ exports.category_create_post = [
         category: category,
         errors: errors.array(),
       });
-      return
+      return;
     } else {
-      const categoryExist = await Category.findOne({ name: req.body.name }).exec();
+      const categoryExist = await Category.findOne({
+        name: req.body.name,
+      }).exec();
       if (categoryExist) {
         res.redirect(categoryExist.url);
       } else {
@@ -68,8 +67,8 @@ exports.category_create_post = [
         res.redirect(category.url);
       }
     }
-  })
-]
+  }),
+];
 
 exports.category_delete_get = asyncHandler(async (req, res, next) => {
   res.send("NOT IMPLEMENTED: Category delete GET");
