@@ -86,7 +86,7 @@ async function createGames() {
       "Play as Nathan Drake and Chloe Frazer in their own standalone adventures as they confront their pasts and forge their own legacies. This game includes the critically acclaimed single-player stories from both UNCHARTED 4: A Thief's End and UNCHARTED: The Lost Legacy.",
       49.99,
       100,
-      categories[0]
+      [categories[0]]
     ),
     gameCreate(
       1,
@@ -94,7 +94,7 @@ async function createGames() {
       "His vengeance against the Gods of Olympus years behind him, Kratos now lives as a man in the realm of Norse Gods and monsters. It is in this harsh, unforgiving world that he must fight to survive… and teach his son to do the same.",
       49.99,
       100,
-      categories[0]
+      [categories[0]]
     ),
     gameCreate(
       2,
@@ -102,7 +102,7 @@ async function createGames() {
       "EA SPORTS FC™ 24 welcomes you to The World's Game: the most true-to-football experience ever with HyperMotionV, PlayStyles optimised by Opta, and an enhanced Frostbite™ Engine.",
       20.99,
       100,
-      categories[1]
+      [categories[1]]
     ),
     gameCreate(
       3,
@@ -110,7 +110,7 @@ async function createGames() {
       "You've inherited your grandfather's old farm plot in Stardew Valley. Armed with hand-me-down tools and a few coins, you set out to begin your new life. Can you learn to live off the land and turn these overgrown fields into a thriving home?",
       14.99,
       30,
-      categories[2]
+      [categories[2]]
     ),
     gameCreate(
       4,
@@ -118,7 +118,7 @@ async function createGames() {
       "Build a world-class team ready to dominate your rivals in football's most prestigious competitions. Progress never stops when you're pursuing footballing greatness.",
       59.99,
       200,
-      categories[1]
+      [categories[1]]
     ),
   ]);
 }
