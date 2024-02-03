@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 console.log(
-  'This script populates some test books, authors, genres and bookinstances to your database. Specified database as argument - e.g.: node populatedb "mongodb+srv://cooluser:coolpassword@cluster0.lz91hw2.mongodb.net/local_library?retryWrites=true&w=majority"'
+  'This script populates some data to your database. Specified database as argument - e.g.: node populatedb "mongodb+srv://cooluser:coolpassword@cluster0.lz91hw2.mongodb.net/local_library?retryWrites=true&w=majority"'
 );
 
 // Get arguments passed on command line
@@ -59,9 +59,21 @@ async function gameCreate(index, title, desc, price, stockNumber, category) {
 async function createCategories() {
   console.log("Adding categories");
   await Promise.all([
-    categoryCreate(0, "Action", "An action game is a video game genre that emphasizes physical challenges, including hand–eye coordination and reaction time"),
-    categoryCreate(1, "Sports", "A sports video game is a video game that simulates the practice of sports"),
-    categoryCreate(2, "Strategy", "Strategy is a major video game genre that emphasizes thinking and planning over direct instant action in order to achieve victory"),
+    categoryCreate(
+      0,
+      "Action",
+      "An action game is a video game genre that emphasizes physical challenges, including hand–eye coordination and reaction time"
+    ),
+    categoryCreate(
+      1,
+      "Sports",
+      "A sports video game is a video game that simulates the practice of sports"
+    ),
+    categoryCreate(
+      2,
+      "Strategy",
+      "Strategy is a major video game genre that emphasizes thinking and planning over direct instant action in order to achieve victory"
+    ),
   ]);
 }
 
