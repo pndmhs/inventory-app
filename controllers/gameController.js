@@ -32,6 +32,14 @@ exports.game_create_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.game_create_post = [
+  (req, res, next) => {
+    if (!Array.isArray(req.body.category)) {
+      req.body.category =
+        typeof req.body.category === "undefined" ? [] : [req.body.category];
+    }
+    next();
+  },
+
   body("title", "Title must not be empty.")
     .trim()
     .isLength({ min: 1 })
