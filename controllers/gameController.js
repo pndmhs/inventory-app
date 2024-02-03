@@ -1,6 +1,7 @@
 const Game = require("../models/game");
 const Category = require("../models/category");
 const asyncHandler = require("express-async-handler");
+const { body, validationResult } = require("express-validator");
 
 exports.index = asyncHandler(async (req, res, next) => {
   const [numGames, numCategories] = await Promise.all([
@@ -30,9 +31,54 @@ exports.game_create_get = asyncHandler(async (req, res, next) => {
   res.render("game_form", { title: "Add New Game", categories: allCategories });
 });
 
-exports.game_create_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Game create POST");
-});
+exports.game_create_post = [
+  body("title", "Title must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("desc", "Description must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("price", "Price must not be empty").trim().isLength({ min: 1 }).escape(),
+  body("stock", "Stock number must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("category").escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const game = new Game({
+      title: req.body.title,
+      desc: req.body.desc,
+      price: req.body.price,
+      stockNumber: req.body.stock,
+      category: req.body.category,
+    });
+
+    if (!errors.isEmpty()) {
+      const allCategories = await Category.find().sort({ name: 1 }).exec();
+
+      for (const category of allCategories) {
+        if (game.category.indexOf(category._id) > -1) {
+          category.checked = true;
+        }
+      }
+
+      res.render("game_form", {
+        title: "Add New Game",
+        game: game,
+        categories: allCategories,
+        errors: errors.array(),
+      });
+    } else {
+      await game.save();
+      res.redirect(game.url);
+    }
+  }),
+];
 
 exports.game_delete_get = asyncHandler(async (req, res, next) => {
   res.send("NOT IMPLEMENTED: Game delete GET");
