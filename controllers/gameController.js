@@ -89,7 +89,16 @@ exports.game_create_post = [
 ];
 
 exports.game_delete_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Game delete GET");
+  const game = await Game.findById(req.params.id).populate("category").exec();
+
+  if (game === null) {
+    res.redirect("/games");
+  }
+
+  res.render("game_delete", {
+    title: "Delete Game",
+    game: game,
+  });
 });
 
 exports.game_delete_post = asyncHandler(async (req, res, next) => {
