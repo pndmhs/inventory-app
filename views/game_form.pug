@@ -9,13 +9,13 @@ block content
       input#title.form-control(type='text', placeholder='Name of game' name='title' required value=(undefined===game ? '' : game.title) )
     div.form-group
       label(for='price') Price:
-      input#price.form-control(type='number', name='price' step="0.01" required value=(undefined===price ? '' : game.price) )
+      input#price.form-control(type='number', name='price' step="0.01" required value=(undefined===game ? '' : game.price) )
     div.form-group
       label(for='desc') Description:
       textarea#description.form-control(placeholder='Description' name='desc' required)= undefined===game ? '' : game.desc
     div.form-group
       label(for='stock') Stock Number:
-      input#stock.form-control(type='number', name='stock' required value=(undefined===price ? '' : game.stock) )
+      input#stock.form-control(type='number', name='stock' required value=(undefined===game ? '' : game.stockNumber) )
     div.form-group
       label Category:
       div
