@@ -129,6 +129,60 @@ exports.game_update_get = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.game_update_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: game update POST");
-});
+exports.game_update_post = [
+  (req, res, next) => {
+    if (!Array.isArray(req.body.category)) {
+      req.body.category =
+        typeof req.body.category === "undefined" ? [] : [req.body.category];
+    }
+    next();
+  },
+
+  body("title", "Title must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("desc", "Description must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("price", "Price must not be empty").trim().isLength({ min: 1 }).escape(),
+  body("stock", "Stock number must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("category").escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const game = new Game({
+      title: req.body.title,
+      desc: req.body.desc,
+      price: req.body.price,
+      stockNumber: req.body.stock,
+      category: req.body.category,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      const allCategories = await Category.find().sort({ name: 1 }).exec();
+
+      for (const category of allCategories) {
+        if (game.category.indexOf(category._id) > -1) {
+          category.checked = true;
+        }
+      }
+
+      res.render("game_form", {
+        title: "Update Game",
+        game: game,
+        categories: allCategories,
+        errors: errors.array(),
+      });
+    } else {
+      await Game.findByIdAndUpdate(req.params.id, game);
+      res.redirect(game.url);
+    }
+  }),
+];
