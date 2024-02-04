@@ -107,7 +107,26 @@ exports.game_delete_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.game_update_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Game update GET");
+  const [game, allCategories] = await Promise.all([
+    Game.findById(req.params.id).exec(),
+    Category.find().sort({ name: 1 }).exec(),
+  ]);
+
+  if (game === null) {
+    const err = new Error("Game not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  allCategories.forEach((category) => {
+    if (game.category.includes(category._id)) category.checked = "true";
+  });
+
+  res.render("game_form", {
+    title: "Update Game",
+    categories: allCategories,
+    game: game,
+  });
 });
 
 exports.game_update_post = asyncHandler(async (req, res, next) => {
