@@ -88,7 +88,22 @@ exports.category_delete_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.category_delete_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Category delete POST");
+  const [category, gamesInCategory] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    Game.find({ category: req.params.id }, "title desc").exec(),
+  ]);
+
+  if (gamesInCategory.length > 0) {
+    res.render("category_delete", {
+      title: "Delete Category",
+      category: category,
+      category_games: gamesInCategory,
+    });
+    return;
+  } else {
+    await Category.findByIdAndDelete(req.body.id);
+    res.redirect("/categories");
+  }
 });
 
 exports.category_update_get = asyncHandler(async (req, res, next) => {
