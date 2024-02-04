@@ -121,6 +121,32 @@ exports.category_update_get = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.category_update_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: category update POST");
-});
+exports.category_update_post = [
+  body("name", "Name must not be empty").trim().isLength({ min: 1 }).escape(),
+  body("description", "Description must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const category = new Category({
+      name: req.body.name,
+      desc: req.body.description,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("category_form", {
+        title: "Update Category",
+        category: category,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      await Category.findByIdAndUpdate(req.params.id, category);
+      res.redirect(category.url);
+    }
+  }),
+];
